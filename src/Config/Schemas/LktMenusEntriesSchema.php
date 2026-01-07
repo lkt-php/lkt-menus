@@ -7,11 +7,17 @@ use Lkt\Factory\Schemas\Fields\DateTimeField;
 use Lkt\Factory\Schemas\Fields\IdField;
 use Lkt\Factory\Schemas\Fields\IntegerChoiceField;
 use Lkt\Factory\Schemas\Fields\IntegerField;
+use Lkt\Factory\Schemas\Fields\PivotField;
+use Lkt\Factory\Schemas\Fields\PivotLeftIdField;
+use Lkt\Factory\Schemas\Fields\PivotPositionField;
+use Lkt\Factory\Schemas\Fields\PivotRightIdField;
 use Lkt\Factory\Schemas\Fields\StringField;
 use Lkt\Factory\Schemas\InstanceSettings;
 use Lkt\Factory\Schemas\Schema;
 use Lkt\Menus\Enums\MenuEntryType;
+use Lkt\Menus\Instances\LktMenu;
 use Lkt\Menus\Instances\LktMenuEntry;
+use Lkt\Menus\Instances\LktMenuPivotEntry;
 
 Schema::add(
     Schema::table('lkt_menus_entries', LktMenuEntry::COMPONENT)
@@ -22,6 +28,10 @@ Schema::add(
         )
         ->setItemsPerPage(20)
         ->setCountableField('id')
+        ->setRelatedAccessPolicy([
+            'id' => 'value',
+            'name' => 'label',
+        ])
         ->addField(IdField::define('id'))
         ->addField(
             DateTimeField::define('createdAt', 'created_at')
@@ -40,4 +50,10 @@ Schema::add(
         ->addField(StringField::define('url'))
         ->addField(IntegerField::define('itemId', 'item_id'))
         ->addAccessPolicy('write', ['nameData', 'includeAvailableAdminRoutes'])
+        ->addField(PivotField::definePivot(LktMenu::COMPONENT, 'lkt_menus__entries', 'menus', 'entry_id')
+            ->setPivotLeftIdField(PivotLeftIdField::defineRelation(LktMenu::COMPONENT, 'menu', 'menu_id'))
+            ->setPivotRightIdField(PivotRightIdField::defineRelation(LktMenuEntry::COMPONENT, 'entry', 'entry_id'))
+            ->setPivotPositionField(PivotPositionField::define('position'))
+            ->setPivotInstanceConfig(LktMenuPivotEntry::class, 'Lkt\Menus\Generated', __DIR__ . '/../../Generated')
+        )
 );

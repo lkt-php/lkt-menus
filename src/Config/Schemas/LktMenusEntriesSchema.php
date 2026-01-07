@@ -39,4 +39,5 @@ Schema::add(
         ->addField(StringField::define('component'))
         ->addField(StringField::define('url'))
         ->addField(IntegerField::define('itemId', 'item_id'))
+        ->addAccessPolicy('write', ['nameData', 'includeAvailableAdminRoutes'])
 );

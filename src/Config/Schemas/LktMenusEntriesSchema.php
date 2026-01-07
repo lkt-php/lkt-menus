@@ -34,7 +34,7 @@ Schema::add(
                 ->setCurrentTimeStampAsDefaultValue()
         )
         ->addField(StringField::define('name')->setIsI18nJson())
-        ->addField(AssocJSONField::define('nameData', 'value')->setIsI18nJson())
+        ->addField(AssocJSONField::define('nameData', 'name')->setIsI18nJson())
         ->addField(IntegerChoiceField::enumChoice(MenuEntryType::class, 'type'))
         ->addField(StringField::define('component'))
         ->addField(StringField::define('url'))

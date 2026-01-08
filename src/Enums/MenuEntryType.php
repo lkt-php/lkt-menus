@@ -12,4 +12,6 @@ enum MenuEntryType: int
     case WebItems = 6;
 
     case RouterRoute = 7;
+    case Header = 8;
+    case Parent = 9;
 }

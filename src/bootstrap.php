@@ -4,7 +4,7 @@ namespace Lkt\Menus;
 
 use Lkt\Commander\Commander;
 use Lkt\Phinx\PhinxConfigurator;
-use Lkt\Users\Console\Commands\SetupTranslationsCommand;
+use Lkt\Menus\Console\Commands\SetupTranslationsCommand;
 use function Lkt\Tools\Requiring\requireFiles;
 
 requireFiles([

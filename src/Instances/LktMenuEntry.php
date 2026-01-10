@@ -22,6 +22,11 @@ class LktMenuEntry extends GeneratedLktMenuEntry
     public function postProcessRead(array $data): array
     {
         if ($this->accessPolicy?->name === 'r-app-menu') {
+
+            if ($this->typeIsWebItems() && $this->isAnonymous() && !$this->getName()) {
+                $data['text'] = $this->getComponent();
+            }
+
             return [
                 'type' => 'entry',
                 'anchor' => $data,

@@ -5,6 +5,7 @@ namespace Lkt\Menus\Instances;
 use Lkt\Menus\Enums\MenuEntryType;
 use Lkt\Menus\Generated\GeneratedLktMenu;
 use Lkt\Users\Instances\LktUser;
+use Lkt\WebItems\WebItem;
 
 class LktMenu extends GeneratedLktMenu
 {
@@ -15,6 +16,8 @@ class LktMenu extends GeneratedLktMenu
         $haystack = $this->getEntries();
         $filtered = [];
         $user = LktUser::getSignedInUser();
+
+        $nativeIncludedAdminWebItems = [];
 
         foreach ($haystack as $entry){
             switch ($entry->getType()) {
@@ -34,7 +37,10 @@ class LktMenu extends GeneratedLktMenu
                 case MenuEntryType::WebItems->value:
                     if (!$user) break;
                     if ($entry->accessLevelIsOnlyAdminUsers()) {
-                        if ($user->hasAdminPermission($entry->getComponent(), 'ls')) $filtered[] = $entry;
+                        if ($user->hasAdminPermission($entry->getComponent(), 'ls')) {
+                            $filtered[] = $entry;
+                            $nativeIncludedAdminWebItems[] = $entry->getComponent();
+                        }
                     }
                     elseif ($entry->accessLevelIsOnlyLoggedUsers()) {
                         if ($user->hasAdminPermission($entry->getComponent(), 'ls')) $filtered[] = $entry;
@@ -46,6 +52,19 @@ class LktMenu extends GeneratedLktMenu
         $r = [];
         foreach ($filtered as $entry) {
             $r[] = $entry->setAccessPolicy('r-app-menu')->autoRead();
+        }
+
+        if ($this->includeAvailableAdminRoutes() && ($user->isAdministrator() || $user->hasAdminAccess())) {
+            foreach (WebItem::getAll() as $webItem) {
+                if (in_array($webItem->publicComponentName, $nativeIncludedAdminWebItems)) continue;
+                if (!$user->hasAdminPermission($webItem->component, 'ls')) continue;
+
+                $anonymousEntry = LktMenuEntry::getInstance()
+                    ->setType(MenuEntryType::WebItems->value)
+                    ->setComponent($webItem->publicComponentName ?? $webItem->component)
+                ;
+                $r[] = $anonymousEntry->setAccessPolicy('r-app-menu')->autoRead();
+            }
         }
         return $r;
     }

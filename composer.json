@@ -12,7 +12,8 @@
     "lkt/commander": "^2.0",
     "lkt/code-maker": "^3.0",
     "lkt/http-router": "^2.0",
-    "lkt/users": "^1.0"
+    "lkt/users": "^1.0",
+    "lkt/web-items": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",

@@ -16,6 +16,10 @@ class LktMenuEntry extends GeneratedLktMenuEntry
         if ($this->typeIsWebItems()) {
             return "/admin/web-items/{$this->getComponent()}";
         }
+
+        if ($this->typeIsWebPages()) {
+            return "/admin/web-pages/{$this->getComponent()}";
+        }
         return '';
     }
 

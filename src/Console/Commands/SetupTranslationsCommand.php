@@ -36,6 +36,10 @@ class SetupTranslationsCommand extends Command
             'es' => 'URL completa',
             'en' => 'Full URL',
         ], $parentId);
+        LktTranslation::createIfMissing('4', TranslationType::Text, [
+            'es' => 'Listado de Páginas Web',
+            'en' => 'Web Pages List',
+        ], $parentId);
         LktTranslation::createIfMissing('6', TranslationType::Text, [
             'es' => 'Listado de Elementos Web',
             'en' => 'Web Items List',
